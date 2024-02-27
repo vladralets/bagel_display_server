@@ -7,51 +7,94 @@ app.use(express.json());
 
 let userCookies;
 
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = (`0${date.getMonth() + 1}`).slice(-2);
-  const day = (`0${date.getDate()}`).slice(-2);
-  return `${year}-${month}-${day}`;
-};
+// const formatDate = (date) => {
+//   const year = date.getFullYear();
+//   const month = (`0${date.getMonth() + 1}`).slice(-2);
+//   const day = (`0${date.getDate()}`).slice(-2);
+//   return `${year}-${month}-${day}`;
+// };
 
-const getTodayRange = () => {
-  const today = new Date();
-  const dateFrom = `${formatDate(today)}T00:00:00`;
-  const dateTo = `${formatDate(today)}T23:59:00`;
-  return { dateFrom, dateTo };
-};
+// const getTodayRange = () => {
+//   const today = new Date();
+//   const dateFrom = `${formatDate(today)}T00:00:00`;
+//   const dateTo = `${formatDate(today)}T23:59:00`;
+//   return { dateFrom, dateTo };
+// };
 
-const { dateFrom, dateTo } = getTodayRange();
+// const { dateFrom, dateTo } = getTodayRange();
 
-const olapBody = (dateFrom, dateTo) => ({
-  "olapType": "SALES",
-  "categoryFields": [],
-  "groupFields": ["GuestNum", "OrderNum", "CashRegisterName"],
-  "stackByDataFields": false,
-  "dataFields": [],
-  "calculatedFields": [{
-    "name": "DishDiscountSumInt",
-    "title": "Sales",
-    "formula": "[DishDiscountSumInt]",
-    "type": "MONEY"
-  }],
-  "filters": [{
-    "field": "OpenDate.Typed",
-    "filterType": "date_range",
-    "dateFrom": dateFrom,
-    "dateTo": dateTo,
-    "valueMin": null,
-    "valueMax": null,
-    "valueList": [],
-    "includeLeft": true,
-    "includeRight": false,
-    "inclusiveList": true
-  }],
-  "includeVoidTransactions": false,
-  "includeNonBusinessPaymentTypes": false
-});
+// const olapBody = (dateFrom, dateTo) => ({
+//   "olapType": "SALES",
+//   "categoryFields": [],
+//   "groupFields": ["GuestNum", "OrderNum", "CashRegisterName"],
+//   "stackByDataFields": false,
+//   "dataFields": [],
+//   "calculatedFields": [{
+//     "name": "DishDiscountSumInt",
+//     "title": "Sales",
+//     "formula": "[DishDiscountSumInt]",
+//     "type": "MONEY"
+//   }],
+//   "filters": [{
+//     "field": "OpenDate.Typed",
+//     "filterType": "date_range",
+//     "dateFrom": dateFrom,
+//     "dateTo": dateTo,
+//     "valueMin": null,
+//     "valueMax": null,
+//     "valueList": [],
+//     "includeLeft": true,
+//     "includeRight": false,
+//     "inclusiveList": true
+//   }],
+//   "includeVoidTransactions": false,
+//   "includeNonBusinessPaymentTypes": false
+// });
 
 app.post('/init-olap-report', async (req, res) => {
+	const formatDate = (date) => {
+		const year = date.getFullYear();
+		const month = (`0${date.getMonth() + 1}`).slice(-2);
+		const day = (`0${date.getDate()}`).slice(-2);
+		return `${year}-${month}-${day}`;
+	};
+	
+	const getTodayRange = () => {
+		const today = new Date();
+		const dateFrom = `${formatDate(today)}T00:00:00`;
+		const dateTo = `${formatDate(today)}T23:59:00`;
+		return { dateFrom, dateTo };
+	};
+	
+	const { dateFrom, dateTo } = getTodayRange();
+	
+	const olapBody = (dateFrom, dateTo) => ({
+		"olapType": "SALES",
+		"categoryFields": [],
+		"groupFields": ["GuestNum", "OrderNum", "CashRegisterName"],
+		"stackByDataFields": false,
+		"dataFields": [],
+		"calculatedFields": [{
+			"name": "DishDiscountSumInt",
+			"title": "Sales",
+			"formula": "[DishDiscountSumInt]",
+			"type": "MONEY"
+		}],
+		"filters": [{
+			"field": "OpenDate.Typed",
+			"filterType": "date_range",
+			"dateFrom": dateFrom,
+			"dateTo": dateTo,
+			"valueMin": null,
+			"valueMax": null,
+			"valueList": [],
+			"includeLeft": true,
+			"includeRight": false,
+			"inclusiveList": true
+		}],
+		"includeVoidTransactions": false,
+		"includeNonBusinessPaymentTypes": false
+	});
   const reqBody = olapBody(dateFrom, dateTo);
 	
 	console.log('reqBody', reqBody.filters[0].dateFrom, reqBody.filters[0].dateTo);
@@ -126,34 +169,34 @@ app.post('/init-olap-report', async (req, res) => {
 });
 
 
-app.post('/get-olap-report', async (req, res) => {
-	const token = req.body.token;
-	const fetchId = req.body.fetchId;
-	const olapBody = req.body.olapBody;
+// app.post('/get-olap-report', async (req, res) => {
+// 	const token = req.body.token;
+// 	const fetchId = req.body.fetchId;
+// 	const olapBody = req.body.olapBody;
 
-	console.log("fetchId", fetchId);
+// 	console.log("fetchId", fetchId);
 
-	import('node-fetch').then(fetch => {
-		fetch.default(`https://bagel-lounge-co.syrve.app/api/olap/fetch/${fetchId}/json`, {
-			method: 'POST',
-			headers: {
-				"Authorization": `Bearer ${token}`,
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(olapBody)
-		})
-		.then(response => {
-			return response.json();
-		})
-		.then(data => {
-			return res.json(data);
-		})
-		.catch(error => {
-			res.status(500).json({ error: true, message: 'Произошла ошибка при обработке вашего запроса', details: error.message });
-		});
-	}
-	);
-});
+// 	import('node-fetch').then(fetch => {
+// 		fetch.default(`https://bagel-lounge-co.syrve.app/api/olap/fetch/${fetchId}/json`, {
+// 			method: 'POST',
+// 			headers: {
+// 				"Authorization": `Bearer ${token}`,
+// 				"Content-Type": "application/json"
+// 			},
+// 			body: JSON.stringify(olapBody)
+// 		})
+// 		.then(response => {
+// 			return response.json();
+// 		})
+// 		.then(data => {
+// 			return res.json(data);
+// 		})
+// 		.catch(error => {
+// 			res.status(500).json({ error: true, message: 'Произошла ошибка при обработке вашего запроса', details: error.message });
+// 		});
+// 	}
+// 	);
+// });
 
 const PORT = 3000;
 app.listen(PORT, () => {
