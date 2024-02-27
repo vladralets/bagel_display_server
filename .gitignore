@@ -1,0 +1,36 @@
+# Зависимости
+/node_modules/
+
+# Логи
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Директории временных файлов
+/tmp
+/.pnp
+.pnp.js
+
+# Файлы среды разработки
+.env
+.env.test
+
+# Дампы
+*.dump
+
+# Сборки (в зависимости от конфигурации)
+/dist
+/build
+
+# Другие файлы и директории, которые могут быть исключены
+.DS_Store
+/.idea
+/.vscode
+/*.jks
+/*.pem
+/*.p12
+/*.crt
+/*.cer
+/*.der
