@@ -146,7 +146,7 @@ app.post('/get-olap-report', async (req, res) => {
 			return response.json();
 		})
 		.then(data => {
-			return res.json(data);
+			return res.json({...data, olapBody});
 		})
 		.catch(error => {
 			res.status(500).json({ error: true, message: 'Произошла ошибка при обработке вашего запроса', details: error.message });
