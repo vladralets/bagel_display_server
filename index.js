@@ -52,7 +52,9 @@ const olapBody = (dateFrom, dateTo) => ({
 });
 
 app.post('/init-olap-report', async (req, res) => {
-  const reqBody = olapBody(dateFrom, dateTo); // Assuming olapBody is a function that correctly sets up your request body.
+  const reqBody = olapBody(dateFrom, dateTo);
+	
+	console.log('reqBody', reqBody.filters[0].dateFrom, reqBody.filters[0].dateTo);
   try {
     const { login, password } = req.body;
     const nodeFetch = await import('node-fetch');
