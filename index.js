@@ -58,7 +58,7 @@ app.post('/init-olap-report', async (req, res) => {
 		const day = (`0${date.getDate()}`).slice(-2);
 		return `${year}-${month}-${day}`;
 	};
-	
+
 	const getTodayRange = () => {
 		const today = new Date();
 		const dateFrom = `${formatDate(today)}T00:00:00`;
@@ -162,7 +162,7 @@ app.post('/init-olap-report', async (req, res) => {
 
     const finalData = await finalResponse.json();
 
-    res.json(finalData);
+    res.json({...finalData, reqBody});
   } catch (error) {
     res.status(500).json({ error: true, message: 'An error occurred while processing your request', details: error.message });
   }
