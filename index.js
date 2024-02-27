@@ -95,11 +95,10 @@ app.post('/init-olap-report', async (req, res) => {
 		"includeVoidTransactions": false,
 		"includeNonBusinessPaymentTypes": false
 	});
-  const reqBody = olapBody(dateFrom, dateTo);
 	
-	console.log('reqBody', reqBody.filters[0].dateFrom, reqBody.filters[0].dateTo);
   try {
     const { login, password } = req.body;
+		const reqBody = olapBody(dateFrom, dateTo);
     const nodeFetch = await import('node-fetch');
     const authResponse = await nodeFetch.default('https://bagel-lounge-co.syrve.app/api/auth/login', {
       method: 'POST',
