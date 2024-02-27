@@ -52,22 +52,7 @@ let userCookies;
 // });
 
 app.post('/init-olap-report', async (req, res) => {
-	const formatDate = (date) => {
-		const year = date.getFullYear();
-		const month = (`0${date.getMonth() + 1}`).slice(-2);
-		const day = (`0${date.getDate()}`).slice(-2);
-		return `${year}-${month}-${day}`;
-	};
 
-	const getTodayRange = () => {
-		const today = new Date();
-		const dateFrom = `${formatDate(today)}T00:00:00`;
-		const dateTo = `${formatDate(today)}T23:59:00`;
-		return { dateFrom, dateTo };
-	};
-	
-	const { dateFrom, dateTo } = getTodayRange();
-	
 	const olapBody = (dateFrom, dateTo) => ({
 		"olapType": "SALES",
 		"categoryFields": [],
@@ -97,7 +82,7 @@ app.post('/init-olap-report', async (req, res) => {
 	});
 	
   try {
-    const { login, password } = req.body;
+    const { login, password, dateFrom, dateTo } = req.body;
 		const reqBody = olapBody(dateFrom, dateTo);
     const nodeFetch = await import('node-fetch');
     const authResponse = await nodeFetch.default('https://bagel-lounge-co.syrve.app/api/auth/login', {
