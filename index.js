@@ -53,33 +53,39 @@ let userCookies;
 
 app.post('/init-olap-report', async (req, res) => {
 
-	const olapBody = (dateFrom, dateTo) => ({
-		"olapType": "SALES",
-		"categoryFields": [],
-		"groupFields": ["GuestNum", "OrderNum", "CashRegisterName"],
-		"stackByDataFields": false,
-		"dataFields": [],
-		"calculatedFields": [{
-			"name": "DishDiscountSumInt",
-			"title": "Sales",
-			"formula": "[DishDiscountSumInt]",
-			"type": "MONEY"
-		}],
-		"filters": [{
-			"field": "OpenDate.Typed",
-			"filterType": "date_range",
-			"dateFrom": dateFrom,
-			"dateTo": dateTo,
-			"valueMin": null,
-			"valueMax": null,
-			"valueList": [],
-			"includeLeft": true,
-			"includeRight": false,
-			"inclusiveList": true
-		}],
-		"includeVoidTransactions": false,
-		"includeNonBusinessPaymentTypes": false
-	});
+	const olapBody = (dateFrom, dateTo) => {
+    return ({
+      "olapType": "SALES",
+      "categoryFields": [],
+      "groupFields": [
+        "GuestNum",
+        "OrderType",
+        "DishCategory"
+      ],
+      "stackByDataFields": false,
+      "dataFields": [],
+      "calculatedFields": [{
+        "name": "DishDiscountSumInt",
+        "title": "Sales",
+        "formula": "[DishDiscountSumInt]",
+        "type": "MONEY"
+      }],
+      "filters": [{
+        "field": "OpenDate.Typed",
+        "filterType": "date_range",
+        "dateFrom": dateFrom,
+        "dateTo": dateTo,
+        "valueMin": null,
+        "valueMax": null,
+        "valueList": [],
+        "includeLeft": true,
+        "includeRight": false,
+        "inclusiveList": true
+      }],
+      "includeVoidTransactions": false,
+      "includeNonBusinessPaymentTypes": false
+    });
+  };
 	
   try {
     const { login, password, dateFrom, dateTo } = req.body;
@@ -123,15 +129,12 @@ app.post('/init-olap-report', async (req, res) => {
     };
 
     let status = await checkStatus();
-		console.log('status', status);
     while (status.data !== "SUCCESS") {
-			console.log('status in while', status);
       if (status.data === "ERROR") {
         throw new Error('OLAP processing failed');
       }
       await new Promise(resolve => setTimeout(resolve, 3000));
       status = await checkStatus();
-			console.log('status after waiting', status);
     }
 
     const finalResponse = await nodeFetch.default(`https://bagel-lounge-co.syrve.app/api/olap/fetch/${fetchId}/json`, {
@@ -145,8 +148,7 @@ app.post('/init-olap-report', async (req, res) => {
     });
 
     const finalData = await finalResponse.json();
-
-    res.json({...finalData, reqBody});
+    res.json({...finalData, whoAmI: "My name is Vlad, more known as Gogi"});
   } catch (error) {
     res.status(500).json({ error: true, message: 'An error occurred while processing your request', details: error.message });
   }
