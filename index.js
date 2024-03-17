@@ -117,7 +117,7 @@ app.post("/init-olap-report", async (req, res) => {
       path: "/init-olap-report",
       dateFrom,
       dateTo,
-      finalData,
+      res: finalData.result.rawData,
       whoAmI: "My name is Vlad, more known as @sipur_belev",
     });
     res.json({
