@@ -113,6 +113,13 @@ app.post("/init-olap-report", async (req, res) => {
     );
 
     const finalData = await finalResponse.json();
+    console.log({
+      path: "/init-olap-report",
+      dateFrom,
+      dateTo,
+      finalData,
+      whoAmI: "My name is Vlad, more known as @sipur_belev",
+    });
     res.json({
       ...finalData,
       whoAmI: "My name is Vlad, more known as @sipur_belev",
@@ -245,6 +252,13 @@ app.post("/get-items", async (req, res) => {
     );
 
     const finalData = await finalResponse.json();
+    console.log({
+      path: "/get-items",
+      dateFrom,
+      dateTo,
+      finalData,
+      whoAmI: "My name is Vlad, more known as @sipur_belev",
+    });
     res.json({
       ...finalData,
       whoAmI: "Get items, and my name is Vlad, more known as @sipur_belev",
