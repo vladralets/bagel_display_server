@@ -138,15 +138,9 @@ app.post("/get-items", async (req, res) => {
     return {
       olapType: "SALES",
       categoryFields: [],
-      groupFields: [
-        "GuestNum",
-        "OrderType",
-        "DishCategory",
-        "DishCode",
-        "DishName",
-      ],
+      groupFields: ["DishCategory"],
       stackByDataFields: false,
-      dataFields: [],
+      dataFields: ["DishAmountInt"],
       calculatedFields: [
         {
           name: "DishDiscountSumInt",
@@ -270,15 +264,20 @@ app.post("/get-part-del", async (req, res) => {
     return {
       olapType: "SALES",
       categoryFields: [],
-      groupFields: ["GuestNum", "OrderType", "DishCategory"],
+      groupFields: ["PayTypes"],
       stackByDataFields: false,
-      dataFields: [],
+      dataFields: ["UniqOrderId.OrdersCount"],
       calculatedFields: [
         {
           name: "DishDiscountSumInt",
           title: "Sales",
           formula: "[DishDiscountSumInt]",
           type: "MONEY",
+        },
+        {
+          name: "OrderItems",
+          title: "Products",
+          formula: "[OrderItems]",
         },
       ],
       filters: [
